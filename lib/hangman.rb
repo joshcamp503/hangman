@@ -1,12 +1,17 @@
+
+require 'yaml'
+
 class Game
   attr_accessor :game_board, :guesses, :game_over, :full_board, :random_word, :guess
   
   def initialize
     @guesses = 10
     @game_over = false
-    pick_random_word
     @game_board = []
+    @incorrect = []
+    pick_random_word
     create_board
+    show_board
     run_game
   end
   
@@ -28,8 +33,6 @@ class Game
       ltr = "_"
       @game_board << ltr
     end
-    p @game_board
-    puts "This word is #{@game_board.length} letters long."
   end
   
   def run_game
@@ -47,6 +50,7 @@ class Game
   end
   
   def guess
+  	save
     puts "Guess a letter."
     @guess = nil
     while @guess == nil
@@ -60,6 +64,27 @@ class Game
     end
     puts "You guessed #{@guess}."
   end
+
+  def save
+		puts "Save game? (Y/N)"
+		save = nil
+		while save == nil
+			save = gets.chomp.downcase
+			case save
+			when "y"
+				File.open("lib/saved.yaml", "r+") do |file|
+        	file.write(self.to_yaml)
+    		end
+    		puts "Game saved."
+			when "n"
+				"n"
+			else
+				save = nil
+				puts "That was not a valid response."
+		    puts "Save game? (Y/N)"
+			end
+		end
+	end
   
   def change_board
     if @full_board.include?(@guess)
@@ -67,6 +92,7 @@ class Game
         @game_board[idx] = ltr if ltr == @guess
       end
     else
+    	@incorrect << @guess
       @guesses -= 1
     end
   end
@@ -89,8 +115,31 @@ class Game
   
   def show_board
     p @game_board
+    puts "Incorrect guesses so far: #{@incorrect.join(", ")}"
   end
   	
 end
 
-Game.new
+
+puts "Welcome to Hangman"
+puts "Would you like to load a saved game? (Y/N)"
+saved = nil
+while saved == nil
+  input = gets.chomp.downcase
+  case input
+  when "y"
+  	puts "Loading saved game..."
+  	saved = YAML.load(File.open("lib/saved.yaml"))
+  	saved.show_board
+  	saved.run_game
+  when "n"
+  	saved = !nil
+  	puts "Starting new game..."
+  	Game.new
+  else
+    puts "That was not a valid response."
+    puts "Would you like to load a saved game? (Y/N)"
+  end
+end
+
+

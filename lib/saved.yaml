@@ -1,0 +1,32 @@
+--- !ruby/object:Game
+guesses: 5
+game_over: false
+game_board:
+- p
+- e
+- s
+- _
+- i
+- n
+- e
+- s
+- s
+incorrect:
+- a
+- u
+- t
+- h
+- l
+random_word: peskiness
+full_board:
+- p
+- e
+- s
+- k
+- i
+- n
+- e
+- s
+- s
+guess: l
+uess: d
