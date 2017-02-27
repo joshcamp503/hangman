@@ -1,9 +1,11 @@
 class Game
+  attr_accessor :game_board, :guesses, :game_over, :full_board, :random_word, :guess
   
   def initialize
-    @@guesses = 10
-    @@game_over = false
+    @guesses = 10
+    @game_over = false
     pick_random_word
+    @game_board = []
     create_board
     run_game
   end
@@ -14,37 +16,38 @@ class Game
     	file_lines = file.readlines()
   		file_lines.map do |str|
     		word = str.strip
-    		word_list << word if word.length > 5 && word.length < 12
+    		word_list << word if word.length > 4 && word.length < 13
   		end
   	end
-  	@@random_word = word_list[Random.rand(0...word_list.length)]
+  	@random_word = word_list[Random.rand(0...word_list.length)]
   end
   
   def create_board
-    full_board = @@random_word.split("")
-    game_board = []
-    full_board.map do |ltr|
+    @full_board = @random_word.split("")
+    @full_board.map do |ltr|
       ltr = "_"
-      game_board << ltr
+      @game_board << ltr
     end
-    p @@random_word
-    p game_board
-    puts "This word is #{game_board.length} letters long."
+    p @game_board
+    puts "This word is #{@game_board.length} letters long."
   end
-
-   def run_game
-    while !@@game_over
+  
+  def run_game
+    while !@game_over
       # ask what your guess is
       guess
       # change game board
       change_board
-      # check for victory
+      # display board
+      show_board
+      # check for game over
+      check_game_over
 
     end
   end
   
   def guess
-    puts "What is your guess?"
+    puts "Guess a letter."
     @guess = nil
     while @guess == nil
       input = gets.chomp.downcase
@@ -55,13 +58,37 @@ class Game
         puts "What is your guess?"
       end
     end
-    @@guesses -= 1
     puts "You guessed #{@guess}."
-    puts "You have #{@@guesses} guesses remaining."
   end
   
   def change_board
-    
+    if @full_board.include?(@guess)
+      @full_board.each_with_index do |ltr, idx|
+        @game_board[idx] = ltr if ltr == @guess
+      end
+    else
+      @guesses -= 1
+    end
+  end
+  
+  def check_game_over
+    if @game_board == @full_board
+      @game_over = true
+      puts "You guessed the word \'#{@random_word}\'!"
+      puts "VICTORY!"
+    elsif @guesses == 0
+      @game_over = true
+      puts "Sorry, you have used all your guesses."
+      puts "The word was \'#{@random_word}\'."
+      puts "Game Over"
+    else
+      @game_over = false
+      puts "You have #{@guesses} guesses remaining."
+    end
+  end
+  
+  def show_board
+    p @game_board
   end
   	
 end
