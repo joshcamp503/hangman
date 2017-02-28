@@ -2,31 +2,32 @@
 guesses: 5
 game_over: false
 game_board:
-- p
-- e
 - s
+- o
 - _
-- i
+- _
+- e
+- n
 - n
 - e
 - s
 - s
 incorrect:
 - a
+- i
 - u
 - t
-- h
-- l
-random_word: peskiness
+- r
+random_word: soddenness
 full_board:
-- p
-- e
 - s
-- k
-- i
+- o
+- d
+- d
+- e
+- n
 - n
 - e
 - s
 - s
-guess: l
-uess: d
+guess: n

@@ -1,4 +1,3 @@
-
 require 'yaml'
 
 class Game
@@ -72,8 +71,8 @@ class Game
 			save = gets.chomp.downcase
 			case save
 			when "y"
-				File.open("lib/saved.yaml", "r+") do |file|
-        	file.write(self.to_yaml)
+				file = File.open("lib/saved.yaml", "w") do |file|
+        	file.write(Psych.dump(self))
     		end
     		puts "Game saved."
 			when "n"
@@ -129,7 +128,7 @@ while saved == nil
   case input
   when "y"
   	puts "Loading saved game..."
-  	saved = YAML.load(File.open("lib/saved.yaml"))
+  	saved = Psych.load(File.open("lib/saved.yaml"))
   	saved.show_board
   	saved.run_game
   when "n"
@@ -141,5 +140,10 @@ while saved == nil
     puts "Would you like to load a saved game? (Y/N)"
   end
 end
+
+
+
+
+
 
 
